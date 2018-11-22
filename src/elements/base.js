@@ -31,17 +31,17 @@ const ArrayElementBase = Chart.Element.extend({
 
     // Save item radius and each position
     container.itemRadius = vm.itemRadius;
-    container.items_pos = [];
+    container.itemsPos = [];
 
     if (vert) {
-      for (var i in container.items) {
-        container.items_pos[i] = vm.x - vm.width / 2 + random() * vm.width;
-        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.items_pos[i], container.items[i]);
+      for (let i = 0; i < container.items.length; i++) {
+        container.itemsPos[i] = vm.x - vm.width / 2 + random() * vm.width;
+        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.itemsPos[i], container.items[i]);
       }
     } else {
-      for (var i in container.items) {
-        container.items_pos[i] = vm.y - vm.height / 2 + random() * vm.height;
-        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.items[i], container.items_pos[i]);
+      for (let i = 0; i < container.items.length; i++) {
+        container.itemsPos[i] = vm.y - vm.height / 2 + random() * vm.height;
+        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.items[i], container.itemsPos[i]);
       }
     }
     ctx.restore();

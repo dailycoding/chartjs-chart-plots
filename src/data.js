@@ -17,8 +17,7 @@ export function plotStats(arr) {
   for (var i = 1; i < arr.length; i++) {
     if (base.min > arr[i]) {
       base.min = arr[i];
-    }
-    else if (base.max < arr[i]) {
+    } else if (base.max < arr[i]) {
       base.max = arr[i];
     }
   }
@@ -32,9 +31,9 @@ export function asValueStats(value, minStats, maxStats) {
     return value;
   }
   if (!Array.isArray(value)) {
-    value = [ value ];
+    value = [value];
   }
-  if (value.__stats == undefined) {
+  if (value.__stats === undefined) {
     value.__stats = plotStats(value);
   }
   return value.__stats;

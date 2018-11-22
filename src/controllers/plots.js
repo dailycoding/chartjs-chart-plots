@@ -39,18 +39,17 @@ function getIntersectItemIndex(element, position) {
   var plots = _view.plots;
   plots.currentItem = undefined;
 
-  for (var i in plots.items) {
-    var x, y;
+  for (let i = 0; i < plots.items.length; i++) {
+    let x, y;
     if (!_view.horizontal) {
-      x = plots.items_pos[i];
+      x = plots.itemsPos[i];
       y = plots.items[i];
     } else {
       x = plots.items[i];
-      y = plots.items_pos[i];
+      y = plots.itemsPos[i];
     }
     if (position.x - _view.itemRadius <= x && x <= position.x + _view.itemRadius &&
-        position.y - _view.itemRadius <= y && y <= position.y + _view.itemRadius)
-    {
+        position.y - _view.itemRadius <= y && y <= position.y + _view.itemRadius) {
       plots.currentItem = i;
       return i;
     }
@@ -74,7 +73,7 @@ function getIntersectItems(chart, position) {
 Chart.Interaction.modes.atPoint = function(chart, e) {
   var position = getRelativePosition(e, chart);
   return getIntersectItems(chart, position);
-}
+};
 
 Chart.Tooltip.positioners.atCurPos = function(elements, position) {
   if (!elements.length) {
@@ -85,7 +84,7 @@ Chart.Tooltip.positioners.atCurPos = function(elements, position) {
   }
 
   return position;
-}
+};
 
 const defaults = {
   tooltips: {
@@ -93,13 +92,15 @@ const defaults = {
     position: 'atCurPos',
     callbacks: {
       label(item, data) {
-        if (!this._chart.tooltip._active.length)
+        if (!this._chart.tooltip._active.length) {
           return;
+        }
 
         var plots = this._chart.tooltip._active[0]._view.plots;
         var currentItem = plots.currentItem;
-        if (currentItem === undefined)
+        if (currentItem === undefined) {
           return '';
+        }
 
         const datasetLabel = data.datasets[item.datasetIndex].label || '';
         const value = data.datasets[item.datasetIndex].data[item.index];
@@ -122,10 +123,6 @@ const plots = Object.assign({}, base, {
 
   _elementOptions() {
     return this.chart.options.elements.plots;
-  },
-
-  getElementsAtEvent(e) {
-    debugger
   },
 
   /**

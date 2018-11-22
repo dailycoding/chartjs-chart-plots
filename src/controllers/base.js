@@ -20,7 +20,7 @@ const array = {
     const options = this._elementOptions();
 
     Chart.controllers.bar.prototype.updateElement.call(this, elem, index, reset);
-    [ 'itemRadius', 'itemStyle', 'hitPadding'].forEach((item) => {
+    ['itemRadius', 'itemStyle', 'hitPadding'].forEach((item) => {
       elem._model[item] = custom[item] !== undefined ? custom[item] : Chart.helpers.valueAtIndexOrDefault(dataset[item], index, options[item]);
     });
   },
