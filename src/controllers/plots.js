@@ -104,6 +104,10 @@ const defaults = {
         const datasetLabel = data.datasets[item.datasetIndex].label || '';
         const value = data.datasets[item.datasetIndex].data[item.index];
         let label = `${datasetLabel} ${typeof item.xLabel === 'string' ? item.xLabel : item.yLabel}`;
+        if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.index) {
+          label += ` ${data.datasets[item.datasetIndex].dataLabels[item.index]}`;
+        }
+
         return `${label} ${value[currentItem]}`;
       }
     }
