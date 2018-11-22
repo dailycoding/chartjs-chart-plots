@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Chart.js module for charting plots",
   "scripts": {
-    "build": "rollup -c -i src/index.js",
+    "build:dev": "rollup -c -i src/index.js",
+    "build:prod": "npm run build:dev && uglifyjs build/Chart.Plots.js -c -m -o build/Chart.Plots.min.js",
+    "prebuild": "npm test",
+    "build": "npm run build:prod",
     "test": "eslint src"
   },
   "keywords": [
@@ -15,6 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "chart.js": "^2.7.3",
-    "rollup": "^0.67.3"
+    "eslint": "^5.9.0",
+    "rollup": "^0.67.3",
+    "uglify-es": "^3.3.9"
   }
 }
