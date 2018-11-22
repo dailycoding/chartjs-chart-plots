@@ -1,0 +1,18 @@
+{
+  "name": "chartjs-chart-plot",
+  "version": "1.0.0",
+  "description": "Chart.js module for charting plots",
+  "scripts": {
+    "test": "eslint src"
+  },
+  "keywords": [
+    "chart.js",
+    "plot",
+    "chart"
+  ],
+  "author": "Kevin Gilliard",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^2.7.3"
+  }
+}
