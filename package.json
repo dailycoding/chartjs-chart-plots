@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Chart.js module for charting plots",
   "scripts": {
+    "build": "rollup -c -i src/index.js",
     "test": "eslint src"
   },
   "keywords": [
@@ -13,6 +14,7 @@
   "author": "Kevin Gilliard",
   "license": "MIT",
   "dependencies": {
-    "chart.js": "^2.7.3"
+    "chart.js": "^2.7.3",
+    "rollup": "^0.67.3"
   }
 }
