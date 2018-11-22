@@ -21,6 +21,7 @@ const ArrayElementBase = Chart.Element.extend({
     if (vm.itemRadius <= 0 || !container.items || container.items.length <= 0) {
       return;
     }
+
     ctx.save();
     ctx.strokeStle = vm.borderColor;
     ctx.fillStyle = vm.backgroundColor;
@@ -28,14 +29,20 @@ const ArrayElementBase = Chart.Element.extend({
     // use the median to initialize the random number generator
     const random = rnd(container.median);
 
+    // Save item radius and each position
+    container.itemRadius = vm.itemRadius;
+    container.items_pos = [];
+
     if (vert) {
-      container.items.forEach((v) => {
-        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, vm.x - vm.width / 2 + random() * vm.width, v);
-      });
+      for (var i in container.items) {
+        container.items_pos[i] = vm.x - vm.width / 2 + random() * vm.width;
+        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.items_pos[i], container.items[i]);
+      }
     } else {
-      container.items.forEach((v) => {
-        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, v, vm.y - vm.height / 2 + random() * vm.height);
-      });
+      for (var i in container.items) {
+        container.items_pos[i] = vm.y - vm.height / 2 + random() * vm.height;
+        Chart.canvasHelpers.drawPoint(ctx, vm.itemStyle, vm.itemRadius, container.items[i], container.items_pos[i]);
+      }
     }
     ctx.restore();
   },

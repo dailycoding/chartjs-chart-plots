@@ -4,14 +4,107 @@ import {plotStats} from '../data';
 import * as Chart from 'chart.js';
 import base, {verticalDefaults} from './base';
 
+function getRelativePosition(e, chart) {
+  if (e.native) {
+    return {
+      x: e.x,
+      y: e.y
+    };
+  }
+
+  return Chart.helpers.getRelativePosition(e, chart);
+}
+
+function parseVisibleItems(chart, handler) {
+  var datasets = chart.data.datasets;
+  var meta, i, j, ilen, jlen;
+
+  for (i = 0, ilen = datasets.length; i < ilen; ++i) {
+    if (!chart.isDatasetVisible(i)) {
+      continue;
+    }
+
+    meta = chart.getDatasetMeta(i);
+    for (j = 0, jlen = meta.data.length; j < jlen; ++j) {
+      var element = meta.data[j];
+      if (!element._view.skip) {
+        handler(element);
+      }
+    }
+  }
+}
+
+function getIntersectItemIndex(element, position) {
+  var _view = element._view;
+  var plots = _view.plots;
+  plots.currentItem = undefined;
+
+  for (var i in plots.items) {
+    var x, y;
+    if (!_view.horizontal) {
+      x = plots.items_pos[i];
+      y = plots.items[i];
+    } else {
+      x = plots.items[i];
+      y = plots.items_pos[i];
+    }
+    if (position.x - _view.itemRadius <= x && x <= position.x + _view.itemRadius &&
+        position.y - _view.itemRadius <= y && y <= position.y + _view.itemRadius)
+    {
+      plots.currentItem = i;
+      return i;
+    }
+  }
+}
+
+function getIntersectItems(chart, position) {
+  var elements = [];
+
+  parseVisibleItems(chart, function(element) {
+    if (element.inRange(position.x, position.y)) {
+      if (getIntersectItemIndex(element, position) !== undefined) {
+        elements.push(element);
+      }
+    }
+  });
+
+  return elements;
+}
+
+Chart.Interaction.modes.atPoint = function(chart, e) {
+  var position = getRelativePosition(e, chart);
+  return getIntersectItems(chart, position);
+}
+
+Chart.Tooltip.positioners.atCurPos = function(elements, position) {
+  if (!elements.length) {
+    return false;
+  }
+  if (!elements[0]._chart.tooltip._active.length) {
+    return false;
+  }
+
+  return position;
+}
+
 const defaults = {
   tooltips: {
+    mode: 'atPoint',
+    position: 'atCurPos',
     callbacks: {
       label(item, data) {
+        if (!this._chart.tooltip._active.length)
+          return;
+
+        var plots = this._chart.tooltip._active[0]._view.plots;
+        var currentItem = plots.currentItem;
+        if (currentItem === undefined)
+          return '';
+
         const datasetLabel = data.datasets[item.datasetIndex].label || '';
         const value = data.datasets[item.datasetIndex].data[item.index];
         let label = `${datasetLabel} ${typeof item.xLabel === 'string' ? item.xLabel : item.yLabel}`;
-        return `${label} ${value}`;
+        return `${label} ${value[currentItem]}`;
       }
     }
   }
@@ -26,6 +119,11 @@ const plots = Object.assign({}, base, {
   _elementOptions() {
     return this.chart.options.elements.plots;
   },
+
+  getElementsAtEvent(e) {
+    debugger
+  },
+
   /**
    * @private
    */
@@ -48,9 +146,7 @@ const plots = Object.assign({}, base, {
 
     const r = {};
     Object.keys(v).forEach((key) => {
-      if (key !== 'outliers') {
-        r[key] = scale.getPixelForValue(Number(v[key]));
-      }
+      r[key] = scale.getPixelForValue(Number(v[key]));
     });
     this._calculateCommonModel(r, data, v, scale);
     return r;

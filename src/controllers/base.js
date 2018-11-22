@@ -25,10 +25,6 @@ const array = {
     });
   },
   _calculateCommonModel(r, data, container, scale) {
-    if (container.outliers) {
-      r.outliers = container.outliers.map((d) => scale.getPixelForValue(Number(d)));
-    }
-
     if (!Array.isArray(data)) {
       data = [data];
     }
