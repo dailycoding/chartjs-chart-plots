@@ -56,11 +56,17 @@ const ArrayElementBase = Chart.Element.extend({
     ctx.beginPath();
     if (vert) {
       container.outliers.forEach((v) => {
-        ctx.arc(vm.x, v, vm.outlierRadius, 0, Math.PI * 2);
+        let idx = vm.boxplot.items.indexOf(v);
+        if (idx >= 0) {
+          ctx.arc(vm.boxplot.itemsPos[idx], v, vm.outlierRadius, 0, Math.PI * 2);
+        }
       });
     } else {
       container.outliers.forEach((v) => {
-        ctx.arc(v, vm.y, vm.outlierRadius, 0, Math.PI * 2);
+        let idx = vm.boxplot.items.indexOf(v);
+        if (idx >= 0) {
+          ctx.arc(v, vm.boxplot.itemsPos[idx], vm.outlierRadius, 0, Math.PI * 2);
+        }
       });
     }
     ctx.fill();
