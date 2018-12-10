@@ -20,11 +20,15 @@ const array = {
     const options = this._elementOptions();
 
     Chart.controllers.bar.prototype.updateElement.call(this, elem, index, reset);
-    ['itemRadius', 'itemStyle', 'hitPadding'].forEach((item) => {
+    ['borderWidth', 'outlierRadius', 'outlierColor', 'itemRadius', 'itemStyle', 'hitPadding'].forEach((item) => {
       elem._model[item] = custom[item] !== undefined ? custom[item] : Chart.helpers.valueAtIndexOrDefault(dataset[item], index, options[item]);
     });
   },
   _calculateCommonModel(r, data, container, scale) {
+    if (container.outliers) {
+      r.outliers = container.outliers.map((d) => scale.getPixelForValue(Number(d)));
+    }
+
     if (!Array.isArray(data)) {
       data = [data];
     }

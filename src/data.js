@@ -142,7 +142,7 @@ export function getRightValue(rawValue) {
   if (typeof rawValue === 'number' || typeof rawValue === 'string') {
     return Number(rawValue);
   }
-  const b = plotStats(rawValue);
+  const b = asBoxPlotStats(rawValue);
   return b ? b.median : rawValue;
 }
 

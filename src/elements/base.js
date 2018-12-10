@@ -5,6 +5,8 @@ import {rnd} from '../data';
 
 export const defaults = Object.assign({}, Chart.defaults.global.elements.rectangle, {
   borderWidth: 1,
+  outlierRadius: 2,
+  outlierColor: Chart.defaults.global.elements.rectangle.backgroundColor,
   itemRadius: 2,
   itemStyle: 'circle',
   hitPadding: 2

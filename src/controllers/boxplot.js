@@ -6,16 +6,28 @@ import base, {verticalDefaults} from './base';
 
 const defaults = {
   tooltips: {
+    mode: 'atPoint',
+    position: 'atCurPos',
     callbacks: {
       label(item, data) {
+        if (!this._chart.tooltip._active.length) {
+          return;
+        }
+
+        var plots = this._chart.tooltip._active[0]._view.boxplot;
+        var currentItem = plots.currentItem;
+        if (currentItem === undefined) {
+          return '';
+        }
+
         const datasetLabel = data.datasets[item.datasetIndex].label || '';
         const value = data.datasets[item.datasetIndex].data[item.index];
-        const b = asBoxPlotStats(value);
-        let label = `${datasetLabel} ${typeof item.xLabel === 'string' ? item.xLabel : item.yLabel}`;
-        if (!b) {
-          return label + 'NaN';
+        let label = `${datasetLabel}`;
+        if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.index) {
+          label += ` ${data.datasets[item.datasetIndex].dataLabels[plots.currentItem]}`;
         }
-        return `${label} (min: ${b.min}, q1: ${b.q1}, median: ${b.median}, q3: ${b.q3}, max: ${b.max})`;
+
+        return `${label} ${value[currentItem]}`;
       }
     }
   }

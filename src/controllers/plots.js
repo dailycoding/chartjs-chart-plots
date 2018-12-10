@@ -36,7 +36,7 @@ function parseVisibleItems(chart, handler) {
 
 function getIntersectItemIndex(element, position) {
   var _view = element._view;
-  var plots = _view.plots;
+  var plots = 'boxplot' in _view ? _view.boxplot : _view.plots;
   plots.currentItem = undefined;
 
   for (let i = 0; i < plots.items.length; i++) {
