@@ -30,6 +30,10 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
 
   },
   _drawBoxPlot(vm, boxplot, ctx, vert) {
+    if (!vm.boxplot.items || vm.boxplot.items.length <= 1) {
+      return;
+    }
+
     ctx.beginPath();
     if (vert) {
       const x = vm.x;
