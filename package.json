@@ -23,9 +23,14 @@
   },
   "dependencies": {
     "chart.js": "^2.7.3",
-    "d3-array": "^2.0.2",
+    "d3-array": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
     "eslint": "^5.9.0",
     "rollup": "^0.67.3",
+    "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "uglify-es": "^3.3.9"
