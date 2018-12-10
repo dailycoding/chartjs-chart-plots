@@ -49,7 +49,7 @@ const ArrayElementBase = Chart.Element.extend({
     ctx.restore();
   },
   _drawOutliers(vm, container, ctx, vert) {
-    if (!container.outliers) {
+    if (!container.outliers || !vm.boxplot.itemsPos) {
       return;
     }
     ctx.fillStyle = vm.outlierColor;

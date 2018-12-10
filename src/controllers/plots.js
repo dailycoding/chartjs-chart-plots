@@ -39,6 +39,10 @@ function getIntersectItemIndex(element, position) {
   var plots = 'boxplot' in _view ? _view.boxplot : _view.plots;
   plots.currentItem = undefined;
 
+  if (!plots.itemsPos) {
+    return;
+  }
+
   for (let i = 0; i < plots.items.length; i++) {
     let x, y;
     if (!_view.horizontal) {
