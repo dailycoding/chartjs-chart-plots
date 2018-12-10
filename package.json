@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Chart.js module for charting plots",
   "scripts": {
-    "build:dev": "rollup -c -i src/index.js",
+    "build:dev": "rollup -c",
     "build:prod": "npm run build:dev && uglifyjs build/Chart.Plots.js -c -m -o build/Chart.Plots.min.js",
     "prebuild": "npm test",
     "build": "npm run build:prod",
