@@ -92,17 +92,17 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
       const x0 = x - width / 2;
       return {
         left: x0,
-        top: boxplot.whiskerMax,
+        top: boxplot.max,
         right: x0 + width,
-        bottom: boxplot.whiskerMin
+        bottom: boxplot.min
       };
     }
     const {y, height} = vm;
     const y0 = y - height / 2;
     return {
-      left: boxplot.whiskerMin,
+      left: boxplot.min,
       top: y0,
-      right: boxplot.whiskerMax,
+      right: boxplot.max,
       bottom: y0 + height
     };
   },
