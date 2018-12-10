@@ -46,6 +46,24 @@ const ArrayElementBase = Chart.Element.extend({
     }
     ctx.restore();
   },
+  _drawOutliers(vm, container, ctx, vert) {
+    if (!container.outliers) {
+      return;
+    }
+    ctx.fillStyle = vm.outlierColor;
+    ctx.beginPath();
+    if (vert) {
+      container.outliers.forEach((v) => {
+        ctx.arc(vm.x, v, vm.outlierRadius, 0, Math.PI * 2);
+      });
+    } else {
+      container.outliers.forEach((v) => {
+        ctx.arc(v, vm.y, vm.outlierRadius, 0, Math.PI * 2);
+      });
+    }
+    ctx.fill();
+    ctx.closePath();
+  },
 
   _getBounds() {
     // abstract
