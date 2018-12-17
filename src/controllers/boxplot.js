@@ -8,9 +8,7 @@ const defaults = {
   tooltips: {
     callbacks: {
       label(item, data) {
-        const datasetLabel = data.datasets[item.datasetIndex].label || '';
-        let label = `${datasetLabel} ${typeof item.xLabel === 'string' ? item.xLabel : item.yLabel}`;
-        return label;
+        return data.datasets[item.datasetIndex].label || '';
       },
       footer(items, data) {
         if (!items || items.length === 0) {
