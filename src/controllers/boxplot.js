@@ -22,11 +22,11 @@ const defaults = {
           return [''];
         }
         return [
-          `MIN: ${b.min}`,
-          `Q1 : ${b.q1}`,
-          `MED: ${b.median}`,
-          `Q3 : ${b.q3}`,
-          `MAX: ${b.max}`
+          `Upper Extreme : ${b.min.toFixed(2)}`,
+          `Upper Quartile: ${b.q1.toFixed(2)}`,
+          `Median: ${b.median.toFixed(2)}`,
+          `Lower Quartile: ${b.q3.toFixed(2)}`,
+          `Lower Extreme : ${b.max.toFixed(2)}`
         ];
       }
     }
