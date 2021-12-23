@@ -7,7 +7,7 @@ import ArrayControllerBase, {verticalDefaults} from './base';
 const defaults = {
   dataElementType: 'boxandwhiskers',
   plugins: {
-    tooltips: {
+    tooltip: {
       callbacks: {
         label(item, data) {
           return data.datasets[item.datasetIndex].label || '';

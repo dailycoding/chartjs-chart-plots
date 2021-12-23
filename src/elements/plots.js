@@ -11,10 +11,8 @@ export default class Plots extends ArrayElementBase {
     this._drawItems(plots, ctx, vert);
   }
   _getBounds() {
-    const vm = this._view;
-
     const vert = this.isVertical();
-    const plots = vm.plots;
+    const plots = this.plots;
 
     if (!plots) {
       return {
@@ -26,7 +24,7 @@ export default class Plots extends ArrayElementBase {
     }
 
     if (vert) {
-      const {x, width} = vm;
+      const {x, width} = this;
       const x0 = x - width / 2;
       return {
         left: x0,
@@ -35,7 +33,7 @@ export default class Plots extends ArrayElementBase {
         bottom: plots.min
       };
     }
-    const {y, height} = vm;
+    const {y, height} = this;
     const y0 = y - height / 2;
     return {
       left: plots.min,
@@ -45,16 +43,14 @@ export default class Plots extends ArrayElementBase {
     };
   }
   height() {
-    const vm = this._view;
-    return vm.base - Math.min(vm.boxplot.q1, vm.boxplot.q3);
+    return this.base - Math.min(this.boxplot.q1, this.boxplot.q3);
   }
   getArea() {
-    const vm = this._view;
-    const iqr = Math.abs(vm.boxplot.q3 - vm.boxplot.q1);
+    const iqr = Math.abs(this.plots.q3 - this.plots.q1);
     if (this.isVertical()) {
-      return iqr * vm.width;
+      return iqr * this.width;
     }
-    return iqr * vm.height;
+    return iqr * this.height;
   }
 }
 

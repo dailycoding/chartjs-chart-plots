@@ -91,29 +91,32 @@ Chart.Tooltip.positioners.atCurPos = function(elements, position) {
 };
 
 const defaults = {
-  tooltips: {
-    mode: 'atPoint',
-    position: 'atCurPos',
-    callbacks: {
-      label(item, data) {
-        if (!this._chart.tooltip._active.length) {
-          return;
-        }
+  dataElementType: 'plots',
+  plugins: {
+    tooltip: {
+      mode: 'atPoint',
+      position: 'atCurPos',
+      callbacks: {
+        label(item, data) {
+          if (!this._chart.tooltip._active.length) {
+            return;
+          }
 
-        var plots = this._chart.tooltip._active[0]._view.plots;
-        var currentItem = plots.currentItem;
-        if (currentItem === undefined) {
-          return '';
-        }
+          var plots = this._chart.tooltip._active[0]._view.plots;
+          var currentItem = plots.currentItem;
+          if (currentItem === undefined) {
+            return '';
+          }
 
-        const datasetLabel = data.datasets[item.datasetIndex].label || '';
-        const value = data.datasets[item.datasetIndex].data[item.index];
-        let label = `${datasetLabel}`;
-        if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.index) {
-          label += ` ${data.datasets[item.datasetIndex].dataLabels[plots.currentItem]}`;
-        }
+          const datasetLabel = data.datasets[item.datasetIndex].label || '';
+          const value = data.datasets[item.datasetIndex].data[item.index];
+          let label = `${datasetLabel}`;
+          if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.index) {
+            label += ` ${data.datasets[item.datasetIndex].dataLabels[plots.currentItem]}`;
+          }
 
-        return `${label} ${value[currentItem]}`;
+          return `${label} ${value[currentItem]}`;
+        }
       }
     }
   }
@@ -127,15 +130,14 @@ export default class PlotsController extends ArrayControllerBase {
   /**
    * @private
    */
-  updateElement(elem, index, properties, mode) {
-    Chart.controllers.bar.prototype.updateElement.call(this, elem, index, properties, mode);
-    elem._model.plots = this._calculatePlotValuesPixels(this.index, index);
+  updateElement(element, index, properties, mode) {
+    Chart.BarController.prototype.updateElement.call(this, element, index, properties, mode);
+    element.plots = this._calculatePlotValuesPixels(this.index, index);
   }
 
   /**
    * @private
    */
-
   _calculatePlotValuesPixels(datasetIndex, index) {
     const scale = this.getValueScale();
     const data = this.chart.data.datasets[datasetIndex].data[index];
@@ -158,9 +160,9 @@ PlotsController.id = 'plots';
 /**
  * @type {any}
  */
-PlotsController.defaults = Chart.helpers.merge({}, [ArrayControllerBase.defaults, defaults]);
+PlotsController.defaults = Chart.helpers.merge({}, [Chart.BarController.defaults, defaults]);
 
 /**
  * @type {any}
  */
-PlotsController.overrides = Chart.helpers.merge({}, [ArrayControllerBase.overrides, verticalDefaults]);
+PlotsController.overrides = Chart.helpers.merge({}, [Chart.BarController.overrides, verticalDefaults]);
