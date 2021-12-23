@@ -1,21 +1,15 @@
 'use strict';
 
-import * as Chart from 'chart.js';
-import ArrayElementBase, {defaults} from './base';
+import ArrayElementBase from './base';
 
 
-Chart.defaults.global.elements.plots = Object.assign({}, defaults);
-
-const Plots = Chart.elements.Plots = ArrayElementBase.extend({
-  draw() {
-    const ctx = this._chart.ctx;
-    const vm = this._view;
-
-    const plots = vm.plots;
+export default class Plots extends ArrayElementBase {
+  draw(ctx) {
+    const plots = this.plots;
     const vert = this.isVertical();
 
-    this._drawItems(vm, plots, ctx, vert);
-  },
+    this._drawItems(plots, ctx, vert);
+  }
   _getBounds() {
     const vm = this._view;
 
@@ -49,11 +43,11 @@ const Plots = Chart.elements.Plots = ArrayElementBase.extend({
       right: plots.max,
       bottom: y0 + height
     };
-  },
+  }
   height() {
     const vm = this._view;
     return vm.base - Math.min(vm.boxplot.q1, vm.boxplot.q3);
-  },
+  }
   getArea() {
     const vm = this._view;
     const iqr = Math.abs(vm.boxplot.q3 - vm.boxplot.q1);
@@ -62,6 +56,6 @@ const Plots = Chart.elements.Plots = ArrayElementBase.extend({
     }
     return iqr * vm.height;
   }
-});
+}
 
-export default Plots;
+Plots.id = 'plots';

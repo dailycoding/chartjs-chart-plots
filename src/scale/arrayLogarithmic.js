@@ -3,15 +3,11 @@
 import * as Chart from 'chart.js';
 import {getRightValue, commonDataLimits, commonScaleOptions} from '../data';
 
-const helpers = Chart.helpers;
-
-const ArrayLogarithmicScaleOptions = helpers.merge({}, [commonScaleOptions, Chart.scaleService.getScaleDefaults('logarithmic')]);
-
-
-const ArrayLogarithmicScale = Chart.scaleService.getScaleConstructor('logarithmic').extend({
+export default class ArrayLogarithmicScale extends Chart.Scale {
   getRightValue(rawValue) {
-    return Chart.LinearScaleBase.prototype.getRightValue.call(this, getRightValue(rawValue));
-  },
+    return Chart.Scale.LinearScaleBase.prototype.getRightValue.call(this, getRightValue(rawValue));
+  }
+
   determineDataLimits() {
     // Add whitespace around bars. Axis shouldn't go exactly from min to max
     const tickOpts = this.options.ticks;
@@ -23,20 +19,24 @@ const ArrayLogarithmicScale = Chart.scaleService.getScaleConstructor('logarithmi
       }
     });
 
-    this.min = helpers.valueOrDefault(tickOpts.min, this.min - this.min * 0.05);
-    this.max = helpers.valueOrDefault(tickOpts.max, this.max + this.max * 0.05);
+    this.min = Chart.helpers.valueOrDefault(tickOpts.min, this.min - this.min * 0.05);
+    this.max = Chart.helpers.valueOrDefault(tickOpts.max, this.max + this.max * 0.05);
 
     if (this.min === this.max) {
       if (this.min !== 0 && this.min !== null) {
-        this.min = Math.pow(10, Math.floor(helpers.log10(this.min)) - 1);
-        this.max = Math.pow(10, Math.floor(helpers.log10(this.max)) + 1);
+        this.min = Math.pow(10, Math.floor(Chart.helpers.log10(this.min)) - 1);
+        this.max = Math.pow(10, Math.floor(Chart.helpers.log10(this.max)) + 1);
       } else {
         this.min = 1;
         this.max = 10;
       }
     }
   }
-});
-Chart.scaleService.registerScaleType('arrayLogarithmic', ArrayLogarithmicScale, ArrayLogarithmicScaleOptions);
+}
 
-export default ArrayLogarithmicScale;
+ArrayLogarithmicScale.id = 'arrayLogarithmic';
+
+/**
+ * @type {any}
+ */
+ArrayLogarithmicScale.defaults = Chart.helpers.merge({}, [commonScaleOptions, Chart.LogarithmicScale.defaults]);

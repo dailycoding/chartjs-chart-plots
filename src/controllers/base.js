@@ -4,26 +4,26 @@ import * as Chart from 'chart.js';
 
 export const verticalDefaults = {
   scales: {
-    yAxes: [{
+    y: {
       type: 'arrayLinear'
-    }]
+    }
   }
 };
 
-const array = {
+export default class ArrayControllerBase extends Chart.BarController {
   _elementOptions() {
     return {};
-  },
-  updateElement(elem, index, reset) {
+  }
+  updateElement(element, index, properties, mode) {
     const dataset = this.getDataset();
-    const custom = elem.custom || {};
+    const custom = element.custom || {};
     const options = this._elementOptions();
 
-    Chart.controllers.bar.prototype.updateElement.call(this, elem, index, reset);
+    Chart.controllers.bar.prototype.updateElement.call(this, element, index, properties, mode);
     ['borderWidth', 'outlierRadius', 'outlierColor', 'itemRadius', 'itemStyle', 'hitPadding'].forEach((item) => {
-      elem._model[item] = custom[item] !== undefined ? custom[item] : Chart.helpers.valueAtIndexOrDefault(dataset[item], index, options[item]);
+      properties[item] = custom[item] !== undefined ? custom[item] : Chart.helpers.valueAtIndexOrDefault(dataset[item], index, options[item]);
     });
-  },
+  }
   _calculateCommonModel(r, data, container, scale) {
     if (container.outliers) {
       r.outliers = container.outliers.map((d) => scale.getPixelForValue(Number(d)));
@@ -34,6 +34,8 @@ const array = {
     }
     r.items = data.map((d) => scale.getPixelForValue(Number(d)));
   }
-};
-
-export default array;
+  getValueScale() {
+    const {_cachedMeta: {vScale}} = this;
+    return vScale;
+  }
+}

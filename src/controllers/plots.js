@@ -2,7 +2,7 @@
 
 import {plotStats} from '../data';
 import * as Chart from 'chart.js';
-import base, {verticalDefaults} from './base';
+import ArrayControllerBase, {verticalDefaults} from './base';
 
 function getRelativePosition(e, chart) {
   if (e.native) {
@@ -119,23 +119,18 @@ const defaults = {
   }
 };
 
-Chart.defaults.plots = Chart.helpers.merge({}, [Chart.defaults.bar, verticalDefaults, defaults]);
-
-const plots = Object.assign({}, base, {
-
-  dataElementType: Chart.elements.Plots,
-
+export default class PlotsController extends ArrayControllerBase {
   _elementOptions() {
     return this.chart.options.elements.plots;
-  },
+  }
 
   /**
    * @private
    */
-  updateElementGeometry(elem, index, reset) {
-    Chart.controllers.bar.prototype.updateElementGeometry.call(this, elem, index, reset);
+  updateElement(elem, index, properties, mode) {
+    Chart.controllers.bar.prototype.updateElement.call(this, elem, index, properties, mode);
     elem._model.plots = this._calculatePlotValuesPixels(this.index, index);
-  },
+  }
 
   /**
    * @private
@@ -156,8 +151,16 @@ const plots = Object.assign({}, base, {
     this._calculateCommonModel(r, data, v, scale);
     return r;
   }
-});
+}
+
+PlotsController.id = 'plots';
+
 /**
- * This class is based off controller.bar.js from the upstream Chart.js library
+ * @type {any}
  */
-export const Plots = Chart.controllers.plots = Chart.controllers.bar.extend(plots);
+PlotsController.defaults = Chart.helpers.merge({}, [ArrayControllerBase.defaults, defaults]);
+
+/**
+ * @type {any}
+ */
+PlotsController.overrides = Chart.helpers.merge({}, [ArrayControllerBase.overrides, verticalDefaults]);

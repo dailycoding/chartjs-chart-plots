@@ -1,43 +1,35 @@
 ﻿'use strict';
 
-import * as Chart from 'chart.js';
-import ArrayElementBase, {defaults} from './base';
+import ArrayElementBase from './base';
 
 
-Chart.defaults.global.elements.boxandwhiskers = Object.assign({}, defaults);
-
-const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
-  draw() {
-    const ctx = this._chart.ctx;
-    const vm = this._view;
-
-    const boxplot = vm.boxplot;
+export default class BoxAndWiskers extends ArrayElementBase {
+  draw(ctx) {
+    const boxplot = this.boxplot;
     const vert = this.isVertical();
 
-
-    this._drawItems(vm, boxplot, ctx, vert);
+    this._drawItems(boxplot, ctx, vert);
 
     ctx.save();
 
-    ctx.fillStyle = vm.backgroundColor;
-    ctx.strokeStyle = vm.borderColor;
-    ctx.lineWidth = vm.borderWidth;
+    ctx.fillStyle = this.options.backgroundColor;
+    ctx.strokeStyle = this.options.borderColor;
+    ctx.lineWidth = this.options.borderWidth;
 
-    this._drawBoxPlot(vm, boxplot, ctx, vert);
-    this._drawOutliers(vm, boxplot, ctx, vert);
+    this._drawBoxPlot(boxplot, ctx, vert);
+    this._drawOutliers(boxplot, ctx, vert);
 
     ctx.restore();
-
-  },
-  _drawBoxPlot(vm, boxplot, ctx, vert) {
-    if (!vm.boxplot.items || vm.boxplot.items.length <= 1) {
+  }
+  _drawBoxPlot(boxplot, ctx, vert) {
+    if (!boxplot.items || boxplot.items.length <= 1) {
       return;
     }
 
     ctx.beginPath();
     if (vert) {
-      const x = vm.x;
-      const width = vm.width;
+      const x = this.x;
+      const width = this.width;
       const x0 = x - width / 2;
       ctx.fillRect(x0, boxplot.q1, width, boxplot.q3 - boxplot.q1);
       ctx.strokeRect(x0, boxplot.q1, width, boxplot.q3 - boxplot.q1);
@@ -52,8 +44,8 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
       ctx.moveTo(x0, boxplot.median);
       ctx.lineTo(x0 + width, boxplot.median);
     } else {
-      const y = vm.y;
-      const height = vm.height;
+      const y = this.y;
+      const height = this.height;
       const y0 = y - height / 2;
       ctx.fillRect(boxplot.q1, y0, boxplot.q3 - boxplot.q1, height);
       ctx.strokeRect(boxplot.q1, y0, boxplot.q3 - boxplot.q1, height);
@@ -71,12 +63,10 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
     }
     ctx.stroke();
     ctx.closePath();
-  },
+  }
   _getBounds() {
-    const vm = this._view;
-
     const vert = this.isVertical();
-    const boxplot = vm.boxplot;
+    const boxplot = this.boxplot;
 
     if (!boxplot) {
       return {
@@ -88,7 +78,7 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
     }
 
     if (vert) {
-      const {x, width} = vm;
+      const {x, width} = this;
       const x0 = x - width / 2;
       return {
         left: x0,
@@ -97,7 +87,7 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
         bottom: boxplot.min
       };
     }
-    const {y, height} = vm;
+    const {y, height} = this;
     const y0 = y - height / 2;
     return {
       left: boxplot.min,
@@ -105,19 +95,17 @@ const BoxAndWiskers = Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
       right: boxplot.max,
       bottom: y0 + height
     };
-  },
-  height() {
-    const vm = this._view;
-    return vm.base - Math.min(vm.boxplot.q1, vm.boxplot.q3);
-  },
-  getArea() {
-    const vm = this._view;
-    const iqr = Math.abs(vm.boxplot.q3 - vm.boxplot.q1);
-    if (this.isVertical()) {
-      return iqr * vm.width;
-    }
-    return iqr * vm.height;
   }
-});
+  height() {
+    return this.base - Math.min(this.boxplot.q1, this.boxplot.q3);
+  }
+  getArea() {
+    const iqr = Math.abs(this.boxplot.q3 - this.boxplot.q1);
+    if (this.isVertical()) {
+      return iqr * this.width;
+    }
+    return iqr * this.height;
+  }
+}
 
-export default BoxAndWiskers;
+BoxAndWiskers.id = 'boxandwhiskers';

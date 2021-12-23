@@ -1,10 +1,10 @@
 // rollup.config.js
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
 
 export default {
-  entry: 'src/index.js',
+  input: 'src/index.js',
   output: {
     file: 'build/Chart.Plots.js',
     name: 'ChartPlots',
@@ -28,7 +28,6 @@ export default {
       ],
       babelrc: false,
       comments: true,
-      runtimeHelpers: true,
     }),
     resolve(),
     commonjs(),
