@@ -6,19 +6,22 @@ import ArrayControllerBase, {verticalDefaults} from './base';
 
 const defaults = {
   dataElementType: 'boxandwhiskers',
+};
+
+const tooltipOverrides = {
   plugins: {
     tooltip: {
       callbacks: {
-        label(item, data) {
-          return data.datasets[item.datasetIndex].label || '';
+        label(item) {
+          return item.dataset.label || '';
         },
-        footer(items, data) {
+        footer(items) {
           if (!items || items.length === 0) {
             return;
           }
 
           var item = items[0];
-          const value = data.datasets[item.datasetIndex].data[item.index];
+          const value = item.dataset.data[item.dataIndex];
           const b = asBoxPlotStats(value);
           if (!b) {
             return [''];
@@ -81,4 +84,4 @@ BoxPlotController.defaults = Chart.helpers.merge({}, [Chart.BarController.defaul
 /**
  * @type {any}
  */
-BoxPlotController.overrides = Chart.helpers.merge({}, [Chart.BarController.overrides, verticalDefaults]);
+BoxPlotController.overrides = Chart.helpers.merge({}, [Chart.BarController.overrides, verticalDefaults, tooltipOverrides]);

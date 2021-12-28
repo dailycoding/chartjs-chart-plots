@@ -94,9 +94,6 @@ const defaults = {
 };
 
 const tooltipOverrides = {
-  interaction: {
-    mode: 'point'
-  },
   plugins: {
     tooltip: {
       mode: 'atPoint',
