@@ -84,7 +84,7 @@ export default class ArrayElementBase extends Chart.BarElement {
     };
   }
   _getHitBounds() {
-    const padding = this._view.hitPadding;
+    const padding = this.options.hitPadding;
     const b = this._getBounds();
     return {
       left: b.left - padding,
@@ -97,14 +97,14 @@ export default class ArrayElementBase extends Chart.BarElement {
     return 0; // abstract
   }
   inRange(mouseX, mouseY) {
-    if (!this._view) {
+    if (!this.options) {
       return false;
     }
     const bounds = this._getHitBounds();
     return mouseX >= bounds.left && mouseX <= bounds.right && mouseY >= bounds.top && mouseY <= bounds.bottom;
   }
   inLabelRange(mouseX, mouseY) {
-    if (!this._view) {
+    if (!this.options) {
       return false;
     }
     const bounds = this._getHitBounds();
@@ -122,7 +122,7 @@ export default class ArrayElementBase extends Chart.BarElement {
     return mouseY >= bounds.top && mouseY <= bounds.bottom;
   }
   getCenterPoint() {
-    const {x, y} = this._view;
+    const {x, y} = this;
     return {x, y};
   }
   getArea() {

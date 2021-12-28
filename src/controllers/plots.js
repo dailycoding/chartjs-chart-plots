@@ -27,7 +27,7 @@ function parseVisibleItems(chart, handler) {
     meta = chart.getDatasetMeta(i);
     for (j = 0, jlen = meta.data.length; j < jlen; ++j) {
       var element = meta.data[j];
-      if (!element._view.skip) {
+      if (!element.skip) {
         handler(element);
       }
     }
@@ -35,8 +35,7 @@ function parseVisibleItems(chart, handler) {
 }
 
 function getIntersectItemIndex(element, position) {
-  var _view = element._view;
-  var plots = 'boxplot' in _view ? _view.boxplot : _view.plots;
+  var plots = 'boxplot' in element ? element.boxplot : element.plots;
   plots.currentItem = undefined;
 
   if (!plots.itemsPos) {
@@ -45,15 +44,15 @@ function getIntersectItemIndex(element, position) {
 
   for (let i = 0; i < plots.items.length; i++) {
     let x, y;
-    if (!_view.horizontal) {
+    if (!element.horizontal) {
       x = plots.itemsPos[i];
       y = plots.items[i];
     } else {
       x = plots.items[i];
       y = plots.itemsPos[i];
     }
-    if (position.x - _view.itemRadius <= x && x <= position.x + _view.itemRadius &&
-        position.y - _view.itemRadius <= y && y <= position.y + _view.itemRadius) {
+    if (position.x - element.options.itemRadius <= x && x <= position.x + element.options.itemRadius &&
+        position.y - element.options.itemRadius <= y && y <= position.y + element.options.itemRadius) {
       plots.currentItem = i;
       return i;
     }
@@ -66,7 +65,7 @@ function getIntersectItems(chart, position) {
   parseVisibleItems(chart, function(element) {
     if (element.inRange(position.x, position.y)) {
       if (getIntersectItemIndex(element, position) !== undefined) {
-        elements.push(element);
+        elements.push(element.$context);
       }
     }
   });
@@ -83,15 +82,21 @@ Chart.Tooltip.positioners.atCurPos = function(elements, position) {
   if (!elements.length) {
     return false;
   }
-  if (!elements[0]._chart.tooltip._active.length) {
-    return false;
-  }
+  // if (!elements[0]._chart.tooltip._active.length) {
+  //   return false;
+  // }
 
   return position;
 };
 
 const defaults = {
   dataElementType: 'plots',
+};
+
+const tooltipOverrides = {
+  interaction: {
+    mode: 'point'
+  },
   plugins: {
     tooltip: {
       mode: 'atPoint',
@@ -102,16 +107,19 @@ const defaults = {
             return;
           }
 
-          var plots = this._chart.tooltip._active[0]._view.plots;
-          var currentItem = plots.currentItem;
+          let plots = this._chart.tooltip._active[0].element.plots;
+          let currentItem = plots.currentItem;
           if (currentItem === undefined) {
             return '';
           }
 
+          if (!data) {
+            data = this._chart.data;
+          }
           const datasetLabel = data.datasets[item.datasetIndex].label || '';
-          const value = data.datasets[item.datasetIndex].data[item.index];
+          const value = data.datasets[item.datasetIndex].data[item.dataIndex];
           let label = `${datasetLabel}`;
-          if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.index) {
+          if (Array.isArray(data.datasets[item.datasetIndex].dataLabels) && data.datasets[item.datasetIndex].dataLabels.length > item.dataIndex) {
             label += ` ${data.datasets[item.datasetIndex].dataLabels[plots.currentItem]}`;
           }
 
@@ -165,4 +173,4 @@ PlotsController.defaults = Chart.helpers.merge({}, [Chart.BarController.defaults
 /**
  * @type {any}
  */
-PlotsController.overrides = Chart.helpers.merge({}, [Chart.BarController.overrides, verticalDefaults]);
+PlotsController.overrides = Chart.helpers.merge({}, [Chart.BarController.overrides, verticalDefaults, tooltipOverrides]);
